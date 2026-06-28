@@ -81,8 +81,8 @@ CREATE TABLE projects (
     title         VARCHAR(255) NOT NULL,
     description   TEXT         NOT NULL,
     thumbnail_url VARCHAR(500) DEFAULT NULL,
-    visibility    VARCHAR(20)  DEFAULT 'public'  -- 'public' | 'removed'
-                               CHECK (visibility IN ('public', 'removed')),
+    visibility    VARCHAR(20)  DEFAULT 'private'  -- 'public' | 'private' | 'removed'
+                               CHECK (visibility IN ('public', 'private', 'removed')),
     created_by    INT REFERENCES users(id) ON DELETE CASCADE,
     created_at    TIMESTAMPTZ DEFAULT NOW(),
     updated_at    TIMESTAMPTZ DEFAULT NOW()

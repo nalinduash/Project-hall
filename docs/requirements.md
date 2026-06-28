@@ -17,7 +17,7 @@ Currently, the Faculty lacks a centralized, standardized platform for students t
 - Allow verified recruiters to seamlessly browse, like, and follow student developers to build talent pipelines.
 - Notify students of recruiter engagement in real-time via an event-driven notification architecture.
 - Give administrators comprehensive visibility and control over all platform content, users, and system health.
-- Deliver a modern, responsive, and performant user experience that reflects the technical standards of the Faculty.
+- Deliver a modern, responsive, and performant user experience that reflects the technical standards of the Faculty, using a **calm, Maroon-based color palette**.
 
 ---
 
@@ -128,8 +128,8 @@ Currently, the Faculty lacks a centralized, standardized platform for students t
     * **Activity Flow:** Admin navigates to Dashboard -> `GET /api/admin/users` -> Backend fetches users + roles -> UI displays data table.
 24. **US-ADM-02:** As an admin, I want to change a user's role (e.g., promote a student to a recruiter) so that they have the correct system permissions.
     * **Activity Flow:** Admin selects user -> Chooses new role from dropdown -> `PUT /api/admin/users/:id/role` -> DB updates `role_id` -> User immediately gains/loses permissions on next request.
-25. **US-ADM-03:** As an admin, I want to hide inappropriate projects from the public feed so that the platform maintains a professional standard.
-    * **Activity Flow:** Admin views project list -> Clicks "Hide" -> `PATCH /api/admin/projects/:id/visibility` -> DB sets `visibility = 'removed'` -> Project instantly disappears from `GET /api/projects` public feed.
+25. **US-ADM-03:** As an admin, I want to hide inappropriate projects from the public feed or block uploads so that the platform maintains a professional standard.
+    * **Activity Flow:** Admin views project list -> Clicks "Hide" -> `PATCH /api/admin/projects/:id/visibility` -> DB sets `visibility = 'removed'` -> Project instantly disappears from `GET /api/projects` public feed. (Ideal: Projects could be private by default and require admin review before going public).
 
 
 ---
@@ -310,6 +310,6 @@ Because permissions are evaluated against the database on every request rather t
 | **API Documentation** | Details of all endpoints | ✅ Complete (`docs/api.md`) |
 | **Requirement Document** | This specification | ✅ Complete |
 | **Docker Deployment** | Containerized architecture | ✅ Complete |
-| **Frontend UI** | React/Vue SPA | 🔲 Pending |
+| **Frontend UI** | React/Vue SPA (Maroon theme) | 🔲 Pending |
 | **Deployment URL** | Live hosted version | 🔲 Pending |
 | **Demo** | Video walkthrough | 🔲 Pending |

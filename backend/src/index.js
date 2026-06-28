@@ -6,6 +6,8 @@ import session from 'express-session';
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 
+import fs from 'fs';
+
 import { initializeDatabase, db } from './db.js';
 import keys from './keys.js';
 import {
@@ -31,6 +33,14 @@ const PORT         = process.env.PORT || 5000;
 const JWT_ISSUER   = process.env.JWT_ISSUER   || 'http://localhost:5000';
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
+// Determine uploads directory dynamically (Docker volume vs local fallback)
+const UPLOADS_DIR = process.env.UPLOADS_DIR || 
+  (fs.existsSync('/app/uploads') ? '/app/uploads' : path.join(process.cwd(), 'uploads'));
+
+if (!fs.existsSync(UPLOADS_DIR)) {
+  fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+}
+
 // ----------------------------------------------------------------
 // Core Middleware
 // ----------------------------------------------------------------
@@ -39,7 +49,7 @@ app.use(cors({ origin: FRONTEND_URL, credentials: true }));
 app.use(express.json());
 
 // Serve uploaded thumbnails as static files
-app.use('/uploads', express.static('/app/uploads'));
+app.use('/uploads', express.static(UPLOADS_DIR));
 
 // Session — only for the Google OAuth round-trip (5-min cookie)
 app.use(session({
@@ -59,8 +69,8 @@ passport.deserializeUser((user, done) => done(null, user));
 // ----------------------------------------------------------------
 passport.use(new GoogleStrategy(
   {
-    clientID:     process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    clientID:     process.env.GOOGLE_CLIENT_ID || 'mock-client-id',
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'mock-client-secret',
     callbackURL:  process.env.GOOGLE_CALLBACK_URL,
   },
   async (_at, _rt, profile, done) => {
