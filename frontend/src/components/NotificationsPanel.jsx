@@ -27,7 +27,7 @@ export default function NotificationsPanel({ open, onClose, notifications, onMar
         <SheetHeader className="flex flex-row items-center justify-between pb-4 border-b border-border">
           <SheetTitle className="text-lg font-bold">Notifications</SheetTitle>
           {unread.length > 0 && (
-            <Button variant="ghost" size="sm" onClick={onMarkAllRead} className="text-xs text-primary hover:text-primary-foreground">
+            <Button variant="ghost" size="sm" onClick={onMarkAllRead} className="text-xs text-primary hover:text-primary-foreground mr-7">
               Mark all read
             </Button>
           )}
@@ -35,7 +35,7 @@ export default function NotificationsPanel({ open, onClose, notifications, onMar
 
         <div className="mt-4 space-y-6">
           {unread.length > 0 && (
-            <div className="space-y-2">
+            <div className="px-3 space-y-2">
               <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Unread</h3>
               {unread.map(n => (
                 <div key={n.id} className="flex items-start justify-between gap-3 p-3 rounded-lg border border-border bg-accent/20">
@@ -51,7 +51,7 @@ export default function NotificationsPanel({ open, onClose, notifications, onMar
             </div>
           )}
 
-          <div className="space-y-2">
+          <div className="px-3 space-y-2">
             <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Previous</h3>
             {read.length === 0 && unread.length === 0 && (
               <p className="text-xs text-muted-foreground py-4 text-center">No notifications yet.</p>
