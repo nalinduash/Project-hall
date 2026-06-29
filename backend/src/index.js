@@ -7,6 +7,7 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 
 import fs from 'fs';
+import { logToFile } from './logger.js';
 
 import { initializeDatabase, db } from './db.js';
 import keys from './keys.js';
@@ -47,6 +48,15 @@ if (!fs.existsSync(UPLOADS_DIR)) {
 // RLS context removed during Knex refactor
 app.use(cors({ origin: FRONTEND_URL, credentials: true }));
 app.use(express.json());
+
+app.use((req, res, next) => {
+  const start = Date.now();
+  res.on('finish', () => {
+    const duration = Date.now() - start;
+    logToFile(`HTTP: ${req.method} ${req.originalUrl} -> ${res.statusCode} (${duration}ms)`);
+  });
+  next();
+});
 
 // Serve uploaded thumbnails as static files
 app.use('/uploads', express.static(UPLOADS_DIR));
