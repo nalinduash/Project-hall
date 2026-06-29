@@ -46,7 +46,7 @@ export default function ProjectCard({ project, onEdit, onDelete, onSelectAuthor,
   const imageUrl = project.thumbnail_url ? `${API_URL}${project.thumbnail_url}` : null;
 
   return (
-    <Card className="flex flex-col h-full bg-card overflow-hidden transition-all hover:border-primary/45">
+    <Card className="flex flex-col h-full bg-card overflow-hidden transition-all hover:border-primary/45 py-0">
       <div className="h-44 w-full bg-accent/15 flex items-center justify-center border-b border-border overflow-hidden relative">
         {imageUrl ? (
           <img src={imageUrl} alt={project.title} className="h-full w-full object-cover transition-transform hover:scale-105 duration-300" />
@@ -63,10 +63,10 @@ export default function ProjectCard({ project, onEdit, onDelete, onSelectAuthor,
           </span>
         )}
       </div>
-      <CardHeader className="p-4 pb-2">
-        <CardTitle className="text-base font-bold line-clamp-1">{project.title}</CardTitle>
+      <CardHeader className="px-4">
+        <CardTitle className="text-base font-bold line-clamp-1 my-0">{project.title}</CardTitle>
       </CardHeader>
-      <CardContent className="p-4 pt-0 pb-2 grow">
+      <CardContent className="px-4 pt-0 pb-2 grow">
         <p className="text-xs text-muted-foreground line-clamp-3 leading-relaxed">{project.description}</p>
       </CardContent>
       <CardFooter className="flex flex-col gap-3 p-4 pt-2 border-t border-border/40 mt-auto">
@@ -95,7 +95,7 @@ export default function ProjectCard({ project, onEdit, onDelete, onSelectAuthor,
           </div>
         </div>
         {isOwner && (
-          <div className="flex w-full gap-2 border-t border-border/30 pt-2">
+          <div className="flex w-full gap-2 border-t border-border/30 pt-2 ">
             <Button variant="outline" size="sm" onClick={() => onEdit(project)} className="flex-1 h-7 text-xs gap-1"><Pencil size={12} /> Edit</Button>
             <Button variant="destructive" size="sm" onClick={() => onDelete(project.id)} className="flex-1 h-7 text-xs gap-1"><Trash size={12} /> Delete</Button>
           </div>
