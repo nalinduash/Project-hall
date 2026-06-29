@@ -52,7 +52,7 @@ export default function Dashboard() {
     <div className="flex min-h-screen flex-col bg-background">
       <Header currentTab={tab} setCurrentTab={setTab} onOpenNotifications={() => setNotifsOpen(true)} unreadCount={unreadCount} />
 
-      <main className="mx-auto w-full max-w-7xl flex-grow px-4 py-8 sm:px-6 lg:px-8">
+      <main className="mx-auto w-full max-w-7xl grow px-4 py-8 sm:px-6 lg:px-8">
         {tab === 'feed' && <ProjectsFeed onSelectAuthor={selectAuthor} />}
         {tab === 'my-profile' && <StudentProfile userId={userProfile.id} onSelectAuthor={selectAuthor} />}
         {tab === 'profile-view' && <StudentProfile userId={selectedAuthor} onSelectAuthor={selectAuthor} />}

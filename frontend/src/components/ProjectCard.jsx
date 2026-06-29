@@ -57,7 +57,7 @@ export default function ProjectCard({ project, onEdit, onDelete, onSelectAuthor,
       <CardHeader className="p-4 pb-2">
         <CardTitle className="text-base font-bold line-clamp-1">{project.title}</CardTitle>
       </CardHeader>
-      <CardContent className="p-4 pt-0 pb-2 flex-grow">
+      <CardContent className="p-4 pt-0 pb-2 grow">
         <p className="text-xs text-muted-foreground line-clamp-3 leading-relaxed">{project.description}</p>
       </CardContent>
       <CardFooter className="flex flex-col gap-3 p-4 pt-2 border-t border-border/40 mt-auto">

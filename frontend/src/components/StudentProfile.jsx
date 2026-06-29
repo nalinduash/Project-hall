@@ -3,6 +3,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { UserPlus, UserMinus } from '@phosphor-icons/react';
 import ProjectCard from './ProjectCard';
+import ProjectForm from './ProjectForm';
+import ThumbnailUpload from './ThumbnailUpload';
 import api from '../lib/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -10,6 +12,9 @@ export default function StudentProfile({ userId, onSelectAuthor }) {
   const { userProfile } = useAuth();
   const [data, setData] = useState(null);
   const [following, setFollowing] = useState(false);
+  const [formOpen, setFormOpen] = useState(false);
+  const [activeProject, setActiveProject] = useState(null);
+  const [uploadProject, setUploadProject] = useState(null);
 
   const fetchProfile = async () => {
     try {
@@ -39,6 +44,14 @@ export default function StudentProfile({ userId, onSelectAuthor }) {
       const key = `followed_${userProfile?.id}_${userId}`;
       if (res.data.following) localStorage.setItem(key, 'true');
       else localStorage.removeItem(key);
+    } catch {}
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('Delete this project?')) return;
+    try {
+      await api.delete(`/api/projects/${id}`);
+      fetchProfile();
     } catch {}
   };
 
@@ -82,13 +95,38 @@ export default function StudentProfile({ userId, onSelectAuthor }) {
                 project={p}
                 isOwner={isMe}
                 onSelectAuthor={onSelectAuthor}
-                onEdit={fetchProfile}
-                onDelete={fetchProfile}
+                onEdit={(proj) => { setActiveProject(proj); setFormOpen(true); }}
+                onDelete={handleDelete}
               />
             ))}
           </div>
         )}
       </div>
+
+      {formOpen && (
+        <ProjectForm
+          open={formOpen}
+          project={activeProject}
+          onClose={() => setFormOpen(false)}
+          onSuccess={(savedProj) => {
+            setFormOpen(false);
+            if (!activeProject) {
+              setUploadProject(savedProj);
+            } else {
+              fetchProfile();
+            }
+          }}
+        />
+      )}
+
+      {uploadProject && (
+        <ThumbnailUpload
+          open={!!uploadProject}
+          projectId={uploadProject.id}
+          onClose={() => { setUploadProject(null); fetchProfile(); }}
+          onSuccess={() => { setUploadProject(null); fetchProfile(); }}
+        />
+      )}
     </div>
   );
 }
