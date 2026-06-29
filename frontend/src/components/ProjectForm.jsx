@@ -9,6 +9,7 @@ import api from '../lib/api';
 export default function ProjectForm({ open, onClose, project, onSuccess }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [visibility, setVisibility] = useState('private');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -16,9 +17,11 @@ export default function ProjectForm({ open, onClose, project, onSuccess }) {
     if (project) {
       setTitle(project.title);
       setDescription(project.description);
+      setVisibility(project.visibility || 'private');
     } else {
       setTitle('');
       setDescription('');
+      setVisibility('private');
     }
     setError('');
   }, [project, open]);
@@ -29,10 +32,10 @@ export default function ProjectForm({ open, onClose, project, onSuccess }) {
     setError('');
     try {
       if (project) {
-        const { data } = await api.put(`/api/projects/${project.id}`, { title, description });
+        const { data } = await api.put(`/api/projects/${project.id}`, { title, description, visibility });
         onSuccess(data);
       } else {
-        const { data } = await api.post('/api/projects', { title, description });
+        const { data } = await api.post('/api/projects', { title, description, visibility });
         onSuccess(data);
       }
     } catch (err) {
@@ -57,6 +60,18 @@ export default function ProjectForm({ open, onClose, project, onSuccess }) {
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
             <Textarea id="description" required value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Explain the project goal, stack, and features..." className="min-h-[100px]" />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="visibility">Visibility</Label>
+            <select
+              id="visibility"
+              value={visibility}
+              onChange={(e) => setVisibility(e.target.value)}
+              className="flex h-10 w-full rounded-md border border-input bg-card px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <option value="private">Private (Only visible to you and Admins)</option>
+              <option value="public">Public (Visible to everyone)</option>
+            </select>
           </div>
           <DialogFooter className="pt-2">
             <Button type="button" variant="outline" onClick={onClose} disabled={loading}>Cancel</Button>

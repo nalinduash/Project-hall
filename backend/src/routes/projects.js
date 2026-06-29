@@ -62,9 +62,13 @@ router.get('/:id', authenticateToken, requirePermission('projects:read'), async 
 });
 
 router.post('/', authenticateToken, requirePermission('projects:create'), async (req, res) => {
-  const { title, description } = req.body;
+  const { title, description, visibility } = req.body;
   if (!title?.trim() || !description?.trim()) {
     return res.status(400).json({ error: 'title and description are required' });
+  }
+
+  if (visibility && !['public', 'private'].includes(visibility)) {
+    return res.status(400).json({ error: "visibility must be 'public' or 'private'" });
   }
 
   try {
@@ -72,6 +76,7 @@ router.post('/', authenticateToken, requirePermission('projects:create'), async 
       .insert({
         title: title.trim(),
         description: description.trim(),
+        visibility: visibility || 'private',
         created_by: parseInt(req.user.sub, 10)
       })
       .returning('*');
@@ -90,7 +95,11 @@ router.post('/', authenticateToken, requirePermission('projects:create'), async 
 
 router.put('/:id', authenticateToken, requirePermission('projects:write'), requireProjectOwnership, async (req, res) => {
   const id = parseInt(req.params.id, 10);
-  const { title, description } = req.body;
+  const { title, description, visibility } = req.body;
+
+  if (visibility && !['public', 'private'].includes(visibility)) {
+    return res.status(400).json({ error: "visibility must be 'public' or 'private'" });
+  }
 
   try {
     const [project] = await db('projects')
@@ -98,6 +107,7 @@ router.put('/:id', authenticateToken, requirePermission('projects:write'), requi
       .update({
         title: title?.trim() || db.raw('title'),
         description: description?.trim() || db.raw('description'),
+        visibility: visibility || db.raw('visibility'),
         updated_at: db.fn.now()
       })
       .returning('*');

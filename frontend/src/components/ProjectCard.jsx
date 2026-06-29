@@ -47,11 +47,20 @@ export default function ProjectCard({ project, onEdit, onDelete, onSelectAuthor,
 
   return (
     <Card className="flex flex-col h-full bg-card overflow-hidden transition-all hover:border-primary/45">
-      <div className="h-44 w-full bg-accent/15 flex items-center justify-center border-b border-border overflow-hidden">
+      <div className="h-44 w-full bg-accent/15 flex items-center justify-center border-b border-border overflow-hidden relative">
         {imageUrl ? (
           <img src={imageUrl} alt={project.title} className="h-full w-full object-cover transition-transform hover:scale-105 duration-300" />
         ) : (
           <span className="text-xs text-muted-foreground uppercase tracking-widest">No Thumbnail</span>
+        )}
+        {isOwner && (
+          <span className={`absolute top-2 right-2 px-2 py-0.5 rounded text-[10px] font-semibold border ${
+            project.visibility === 'public' 
+              ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' 
+              : 'bg-amber-500/10 text-amber-500 border-amber-500/20'
+          }`}>
+            {project.visibility === 'public' ? 'Public' : 'Private'}
+          </span>
         )}
       </div>
       <CardHeader className="p-4 pb-2">
