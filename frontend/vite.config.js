@@ -11,7 +11,10 @@ const __dirname = path.dirname(__filename)
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-    allowedHosts: 'all',
+    allowedHosts: [
+      "4.240.112.63.nip.io",
+      "localhost"
+    ],
   },
   resolve: {
     alias: {
