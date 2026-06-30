@@ -3,3 +3,5 @@ backend/uploads/
 node_modules/
 dist/
 *.log
+my-ssh-key.pem
+confid
