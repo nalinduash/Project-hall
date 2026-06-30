@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import { db } from './db.js';
 import keys from './keys.js';
 import dotenv from 'dotenv';
+import { logToFile } from './logger.js';
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ export async function sendOTP(email) {
   await db('otps').insert({ email, code, expires_at: expiresAt });
 
   console.log(`\n🔑 OTP for ${email}: ${code}\n`);
+  logToFile(`AUTH: OTP code requested for ${email}`);
 
   return { message: 'OTP sent successfully (check backend console)' };
 }
@@ -55,6 +57,7 @@ export async function verifyOTP(email, code) {
     [user] = await db('users').insert({ email, role_id: 3 }).returning('*');
   }
 
+  logToFile(`AUTH: OTP verified successfully for ${email}`);
   return generateTokenSet(user);
 }
 
@@ -79,6 +82,7 @@ export async function signupWithPassword(email, password, roleId = 3) {
   const pHash = hashPassword(password);
   const [newUser] = await db('users').insert({ email, password_hash: pHash, role_id: roleId }).returning('*');
 
+  logToFile(`AUTH: Password signup completed for ${email} with role_id ${roleId}`);
   return generateTokenSet(newUser);
 }
 
@@ -95,6 +99,7 @@ export async function loginWithPassword(email, password) {
   const isValid = verifyPassword(password, user.password_hash);
   if (!isValid) throw new Error('Invalid email or password');
 
+  logToFile(`AUTH: Password login succeeded for ${email}`);
   return generateTokenSet(user);
 }
 
@@ -114,6 +119,7 @@ export async function refreshTokens(refreshToken) {
 
   await db('refresh_tokens').where({ id: dbToken.id }).update({ revoked_at: db.fn.now() });
 
+  logToFile(`AUTH: Rotated tokens for user ID ${user.id} (${user.email})`);
   return generateTokenSet(user);
 }
 
@@ -126,6 +132,7 @@ export async function revokeToken(refreshToken) {
     .update({ revoked_at: db.fn.now() });
 
   if (updatedRows === 0) return { message: 'Token already revoked or not found' };
+  logToFile('AUTH: Revoked refresh token');
   return { message: 'Token successfully revoked' };
 }
 
